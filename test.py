@@ -22,12 +22,12 @@ class Talker(Node):
         self.publisher = self.create_publisher(
             String, 'topic', qos_profile=qos,
             event_callbacks=PublisherEventCallbacks(
-                deadline=self.dead_cb,
-                liveliness=self.live_cb
+                # deadline=self.dead_cb,
+                # liveliness=self.live_cb
             ))
         self.count = 0
 
-        self.timer = self.create_timer(0.3, self.timer_cb)
+        self.timer = self.create_timer(0.6, self.timer_cb)
 
     def fini(self):
         # Destroy the timer attached to the node explicitly
@@ -35,7 +35,9 @@ class Talker(Node):
         # when the garbage collector destroys the node object)
         self.get_logger().info('Shutting down')
         self.destroy_timer(self.timer)
+        self.get_logger().info('Destroyed timer')
         self.destroy_node()
+        self.get_logger().info('Destroyed node')
 
     def timer_cb(self):
         msg = String()
@@ -52,13 +54,13 @@ class Talker(Node):
 
 
 class Listener(Node):
-    def __init__(self):
-        super().__init__('Listener')
+    def __init__(self, name):
+        super().__init__(name)
         self.subscription = self.create_subscription(
             String, 'topic', self.msg_cb,
             event_callbacks=SubscriptionEventCallbacks(
                 deadline=self.dead_cb,
-                liveliness=self.live_cb
+                liveliness=self.live_cb,
             ))
 
     def msg_cb(self, msg):
@@ -77,7 +79,8 @@ def main(args=None):
     executor = SingleThreadedExecutor()
 
     talker = Talker()
-    listener = Listener()
+    listener = Listener('Listen1')
+    listener2 = Listener('Listen2')
 
     def killa():
         executor.remove_node(talker)
@@ -87,6 +90,7 @@ def main(args=None):
 
     executor.add_node(talker)
     executor.add_node(listener)
+    executor.add_node(listener2)
 
     executor.spin()
 
