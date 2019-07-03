@@ -33,8 +33,8 @@ repositories:
     version: master
   ros/resource_retriever:
     type: git
-    url: https://github.com/ros/resource_retriever.git
-    version: ros2
+    url: git@github.com:emersonknapp/resource_retriever
+    version: no-curl
   emersonknapp/omni-rviz:
     type: git
     url: git@github.com:emersonknapp/omni-rviz2
