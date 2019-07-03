@@ -35,3 +35,7 @@ repositories:
     type: git
     url: https://github.com/ros/resource_retriever.git
     version: ros2
+  emersonknapp/omni-rviz:
+    type: git
+    url: git@github.com:emersonknapp/omni-rviz2
+    version: frontend-wip
